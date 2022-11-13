@@ -1,0 +1,22 @@
+name: Java Maven Build
+'on':
+  workflow_dispatch: {}
+  push: {}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - id: get_artifact_name
+      name: Create ZIP Packages
+      run: |-
+        zip -r space_init.0.0.${{ github.run_number }}.zip space_init
+        zip -r helm_project.0.0.${{ github.run_number }}.zip helm_project
+        zip -r serverless_project.0.0.${{ github.run_number }}.zip serverless_project
+      shell: bash
+
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "space_init.0.0.${{ github.run_number }}.zip,serverless_project.0.0.${{ github.run_number }}.zip,helm_project.0.0.${{ github.run_number }}.zip"
