@@ -7,6 +7,3 @@ resource "octopusdeploy_space" "new_space" {
   space_managers_team_members = []
 }
 
-output "octopus_space_id" {
-  value = octopusdeploy_space.new_space.id
-}
