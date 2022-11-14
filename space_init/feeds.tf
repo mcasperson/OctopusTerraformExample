@@ -7,3 +7,9 @@ resource "octopusdeploy_docker_container_registry" "dockerhub_feed" {
   password = var.docker_hub_password
   username = var.docker_hub_username
 }
+
+# This is a new helm feed that allows us to deploy the K8s dashboard
+resource "octopusdeploy_helm_feed" "dashboard" {
+  feed_uri = "https://kubernetes.github.io/dashboard/"
+  name     = "Kubernetes Dashboard"
+}
