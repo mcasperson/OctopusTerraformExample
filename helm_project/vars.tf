@@ -59,3 +59,16 @@ variable "helm_variables" {
   description = "The list of variables to be supplied to the helm chart."
   default     = {}
 }
+
+variable "octopus_environments" {
+  type = list(string)
+  nullable = false
+  description = "The list of environments in the space."
+  default = ["Development", "Test", "Production"]
+}
+
+variable "worker_pool_name" {
+  type = string
+  nullable = false
+  description = "The name of the worker pool to run deployments from"
+}

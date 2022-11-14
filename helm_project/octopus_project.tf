@@ -24,7 +24,7 @@ resource "octopusdeploy_project" "new_project" {
   }
 
   connectivity_policy {
-    allow_deployments_to_no_targets = false
+    allow_deployments_to_no_targets = true
     exclude_unhealthy_targets       = false
     skip_machine_behavior           = "SkipUnavailableMachines"
   }
@@ -56,18 +56,53 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
 
   step {
     condition           = "Success"
+    name                = "Create K8s Target"
+    package_requirement = "LetOctopusDecide"
+    start_trigger       = "StartAfterPrevious"
+    action {
+      action_type    = "Octopus.Script"
+      name           = "Create K8s Target"
+      run_on_server  = true
+      worker_pool_id = octopusdeploy_static_worker_pool.new_pool.id
+
+      properties = {
+        "Octopus.Action.RunOnServer": "true",
+        "Octopus.Action.Script.ScriptSource": "Inline",
+        "Octopus.Action.Script.Syntax": "Bash",
+        "Octopus.Action.Script.ScriptBody": <<EOF
+        TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+        NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+        CA=$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
+
+        New-OctopusTokenAccount \
+          -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" \
+          -token $TOKEN \
+          -updateIfExisting
+
+        New-OctopusKubernetesTarget \
+          -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" \
+          -clusterUrl "https://kubernetes.default.svc" \
+          -octopusRoles "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" \
+          -octopusAccountIdOrName "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" \
+          -namespace $NAMESPACE \
+          -updateIfExisting \
+          -skipTlsVerification True
+        EOF
+      }
+    }
+  }
+
+  step {
+    condition           = "Success"
     name                = "Upgrade a Helm Chart"
     package_requirement = "LetOctopusDecide"
     start_trigger       = "StartAfterPrevious"
+    target_roles        = [ "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" ]
     action {
       action_type    = "Octopus.HelmChartUpgrade"
       name           = "Upgrade a Helm Chart"
       run_on_server  = true
-      worker_pool_id = data.octopusdeploy_worker_pools.ubuntu_worker_pool.worker_pools[0].id
-      container {
-        feed_id = data.octopusdeploy_feeds.dockerhub.feeds[0].id
-        image   = "octopusdeploy/worker-tools:3.3.2-ubuntu.18.04"
-      }
+      worker_pool_id = octopusdeploy_static_worker_pool.new_pool.id
       primary_package {
         acquisition_location = "Server"
         feed_id              = data.octopusdeploy_feeds.built_in.feeds[0].id
