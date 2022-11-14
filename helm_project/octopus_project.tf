@@ -83,19 +83,19 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
         # See https://octopus.com/docs/infrastructure/deployment-targets/dynamic-infrastructure
 
         # Create a new token account with the token details
-        New-OctopusTokenAccount \
-          -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" \
-          -token $TOKEN \
+        New-OctopusTokenAccount `
+          -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" `
+          -token $TOKEN `
           -updateIfExisting
 
         # Create a new target pointing to the hosting K8s cluster
-        New-OctopusKubernetesTarget \
-          -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" \
-          -clusterUrl "https://kubernetes.default.svc" \
-          -octopusRoles "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" \
-          -octopusAccountIdOrName "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" \
-          -namespace $NAMESPACE \
-          -updateIfExisting \
+        New-OctopusKubernetesTarget `
+          -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" `
+          -clusterUrl "https://kubernetes.default.svc" `
+          -octopusRoles "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" `
+          -octopusAccountIdOrName "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" `
+          -namespace $NAMESPACE `
+          -updateIfExisting `
           -skipTlsVerification True
         EOF
       }
