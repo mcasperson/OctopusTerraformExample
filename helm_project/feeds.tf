@@ -14,10 +14,10 @@ data "octopusdeploy_feeds" "built_in" {
   take      = 1
 }
 
-# Get the ID of the built-in feed for the current space.
+# Get the ID of the feed hosting the helm chart
 data "octopusdeploy_feeds" "kubernetes_dashboard" {
   feed_type = "Helm"
-  name      = "Kubernetes Dashboard"
+  name      = var.helm_feed_name
   skip      = 0
   take      = 1
 }

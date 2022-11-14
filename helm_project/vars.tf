@@ -66,3 +66,9 @@ variable "worker_pool_name" {
   description = "The name of the worker pool to run deployments from"
   default     = "Kubernetes Workers"
 }
+
+variable "helm_feed_name" {
+  type        = string
+  nullable    = false
+  description = "The name of the feed hosting the helm chart"
+}
