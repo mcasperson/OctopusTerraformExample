@@ -1,9 +1,10 @@
 This repo provides sample Terraform files used to populate new spaces in Octopus and create
 small sample projects.
 
+# A note on backend storage
 The Terraform projects have a one-to-many relationship with the resources they create. For example,
 you would likely create many new spaces with the configuration files under the `space_init`
-directory.
+directory, and many new projects with the configuration files under `helm_project`.
 
 To accomplish this, each time the configuration is applied, it must use a unique backend location.
 Unfortunately [Terraform does not support variables in the backend configuration](https://github.com/hashicorp/terraform/issues/13022).
