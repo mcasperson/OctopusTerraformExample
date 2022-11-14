@@ -9,7 +9,7 @@ resource "octopusdeploy_project" "new_project" {
   auto_create_release                  = false
   default_guided_failure_mode          = "EnvironmentDefault"
   default_to_skip_if_already_installed = false
-  description                          = var.octopus_project_description
+  description                          = "Deploys the Kubernetes dashboard"
   discrete_channel_release             = false
   is_disabled                          = false
   is_discrete_channel_release          = false
@@ -63,7 +63,7 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
       action_type    = "Octopus.Script"
       name           = "Create K8s Target"
       run_on_server  = true
-      worker_pool_id = octopusdeploy_static_worker_pool.new_pool.id
+      worker_pool_id = data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].id
 
       properties = {
         "Octopus.Action.RunOnServer": "true",
@@ -108,7 +108,7 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
       worker_pool_id = octopusdeploy_static_worker_pool.new_pool.id
       primary_package {
         acquisition_location = "Server"
-        feed_id              = octopusdeploy_helm_feed.dashboard.id
+        feed_id              = data.octopusdeploy_feeds.kubernetes_dashboard.feeds[0].id
         package_id           = var.helm_package_id
         properties           = {
           "SelectionMode" : "immediate"
