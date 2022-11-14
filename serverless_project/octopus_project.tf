@@ -80,7 +80,7 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
         properties = {
           "Octopus.Action.RunOnServer" : "true",
           "Octopus.Action.Script.ScriptSource" : "Inline",
-          "Octopus.Action.Script.Syntax" : "PowerShell",
+          "Octopus.Action.Script.Syntax" : "Bash",
           "Octopus.Action.Script.ScriptBody" : <<EOF
           serverless deploy 2>&1
           EOF
