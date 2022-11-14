@@ -5,6 +5,7 @@ resource "octopusdeploy_project_group" "new_project_group" {
   name        = var.octopus_project_group_name
 }
 
+# https://registry.terraform.io/providers/OctopusDeployLabs/octopusdeploy/latest/docs/resources/project
 resource "octopusdeploy_project" "new_project" {
   auto_create_release                  = false
   default_guided_failure_mode          = "EnvironmentDefault"
@@ -32,6 +33,7 @@ resource "octopusdeploy_project" "new_project" {
 }
 
 # These are some handy debugging variables you can set to true when performing deployments in Octopus.
+# https://registry.terraform.io/providers/OctopusDeployLabs/octopusdeploy/latest/docs/resources/variable
 resource "octopusdeploy_variable" "debug_variable" {
   name         = "OctopusPrintVariables"
   type         = "String"
@@ -52,6 +54,7 @@ resource "octopusdeploy_variable" "debug_evaluated_variable" {
 }
 
 # This is the deployment process i.e. the list of steps.
+# https://registry.terraform.io/providers/OctopusDeployLabs/octopusdeploy/latest/docs/resources/deployment_process
 resource "octopusdeploy_deployment_process" "new_deployment_process" {
   project_id = octopusdeploy_project.new_project.id
 
@@ -111,7 +114,7 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
       action_type    = "Octopus.HelmChartUpgrade"
       name           = "Upgrade a Helm Chart"
       run_on_server  = true
-      worker_pool_id = octopusdeploy_static_worker_pool.new_pool.id
+      worker_pool_id = data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].id
       primary_package {
         acquisition_location = "Server"
         feed_id              = data.octopusdeploy_feeds.kubernetes_dashboard.feeds[0].id
