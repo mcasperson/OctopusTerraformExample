@@ -1,8 +1,8 @@
 # https://registry.terraform.io/providers/OctopusDeployLabs/octopusdeploy/latest/docs/resources/project_group
 # This is the project group that the new project is placed into.
 resource "octopusdeploy_project_group" "new_project_group" {
-  description  = var.octopus_project_group_description
-  name         = var.octopus_project_group_name
+  description = var.octopus_project_group_description
+  name        = var.octopus_project_group_name
 }
 
 resource "octopusdeploy_project" "new_project" {
@@ -18,6 +18,7 @@ resource "octopusdeploy_project" "new_project" {
   project_group_id                     = octopusdeploy_project_group.new_project_group.id
   tenanted_deployment_participation    = "Untenanted"
   space_id                             = var.octopus_space_id
+  lifecycle_id                         = data.octopusdeploy_lifecycles.default.lifecycles[0].id
   included_library_variable_sets       = []
   versioning_strategy {
     template = "#{Octopus.Version.LastMajor}.#{Octopus.Version.LastMinor}.#{Octopus.Version.LastPatch}.#{Octopus.Version.NextRevision}"
@@ -66,14 +67,17 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
       worker_pool_id = data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].id
 
       properties = {
-        "Octopus.Action.RunOnServer": "true",
-        "Octopus.Action.Script.ScriptSource": "Inline",
-        "Octopus.Action.Script.Syntax": "Bash",
-        "Octopus.Action.Script.ScriptBody": <<EOF
+        "Octopus.Action.RunOnServer" : "true",
+        "Octopus.Action.Script.ScriptSource" : "Inline",
+        "Octopus.Action.Script.Syntax" : "PowerShell",
+        "Octopus.Action.Script.ScriptBody" : <<EOF
         # Read the token, namespace, and certificate from the pod hosting the worker
         TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
         NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
         CA=$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
+
+        # We use the dynamic target scripts to create a Kubernetes target.
+        # See https://octopus.com/docs/infrastructure/deployment-targets/dynamic-infrastructure
 
         # Create a new token account with the token details
         New-OctopusTokenAccount \
@@ -100,7 +104,9 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
     name                = "Upgrade a Helm Chart"
     package_requirement = "LetOctopusDecide"
     start_trigger       = "StartAfterPrevious"
-    target_roles        = [ "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" ]
+    target_roles        = [
+      "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}"
+    ]
     action {
       action_type    = "Octopus.HelmChartUpgrade"
       name           = "Upgrade a Helm Chart"
@@ -116,12 +122,12 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
       }
 
       properties = {
-        "Octopus.Action.Helm.ResetValues": "True",
-        "Octopus.Action.Helm.ClientVersion": "V3",
-        "Octopus.Action.Helm.ReleaseName": var.helm_release_name,
-        "Octopus.Action.Package.DownloadOnTentacle": "False",
-        "OctopusUseBundledTooling": "False",
-        "Octopus.Action.Helm.KeyValues": jsonencode(var.helm_variables)
+        "Octopus.Action.Helm.ResetValues" : "True",
+        "Octopus.Action.Helm.ClientVersion" : "V3",
+        "Octopus.Action.Helm.ReleaseName" : var.helm_release_name,
+        "Octopus.Action.Package.DownloadOnTentacle" : "False",
+        "OctopusUseBundledTooling" : "False",
+        "Octopus.Action.Helm.KeyValues" : jsonencode(var.helm_variables)
       }
     }
   }
