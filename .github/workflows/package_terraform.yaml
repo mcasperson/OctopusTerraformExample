@@ -20,3 +20,4 @@ jobs:
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "space_init.0.0.${{ github.run_number }}.zip,serverless_project.0.0.${{ github.run_number }}.zip,helm_project.0.0.${{ github.run_number }}.zip"
+        tag: 0.0.${{ github.run_number }}
