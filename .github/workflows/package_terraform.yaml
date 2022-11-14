@@ -21,7 +21,7 @@ jobs:
 
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: |
+        artifacts: >
           space_lookup.0.0.${{ github.run_number }}.zip,
           space_create.0.0.${{ github.run_number }}.zip,
           space_init.0.0.${{ github.run_number }}.zip,
