@@ -8,7 +8,6 @@ directory.
 To accomplish this, each time the configuration is applied, it must use a unique backend location.
 Unfortunately [Terraform does not support variables in the backend configuration](https://github.com/hashicorp/terraform/issues/13022).
 
-To work around this, the backend configuration has been defined in a JSON file (as opposed to the HCL
-syntax used by other configuration files). This JSON can be modified during deployment using the
-[structured configuration variables](https://octopus.com/docs/projects/steps/configuration-features/structured-configuration-variables-feature)
-feature to inject unique backend configuration based on the resources being created.
+To work around this, the backend configuration includes Octopus template syntax to replace the
+key in a shared S3 bucket with a variable generated at runtime. This allows one package to manage
+multiple resources.
