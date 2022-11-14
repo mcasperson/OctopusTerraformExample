@@ -16,9 +16,15 @@ jobs:
         zip -r space_init.0.0.${{ github.run_number }}.zip space_init
         zip -r helm_project.0.0.${{ github.run_number }}.zip helm_project
         zip -r serverless_project.0.0.${{ github.run_number }}.zip serverless_project
+        zip -r space_lookup.0.0.${{ github.run_number }}.zip space_lookup
       shell: bash
 
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "space_create.0.0.${{ github.run_number }}.zip,space_init.0.0.${{ github.run_number }}.zip,serverless_project.0.0.${{ github.run_number }}.zip,helm_project.0.0.${{ github.run_number }}.zip"
+        artifacts: |
+          space_lookup.0.0.${{ github.run_number }}.zip,
+          space_create.0.0.${{ github.run_number }}.zip,
+          space_init.0.0.${{ github.run_number }}.zip,
+          serverless_project.0.0.${{ github.run_number }}.zip,
+          helm_project.0.0.${{ github.run_number }}.zip
         tag: 0.0.${{ github.run_number }}
