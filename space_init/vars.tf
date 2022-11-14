@@ -38,8 +38,8 @@ variable "docker_hub_password" {
 
 variable "octopus_environments" {
   type = list(object({
-    name = number
-    description = number
+    name = string
+    description = string
   }))
   nullable = false
   description = "The list of environments to create in the new space."
