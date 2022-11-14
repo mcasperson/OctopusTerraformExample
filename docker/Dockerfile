@@ -1,5 +1,7 @@
 # This Dockerfile builds an Octopus worker image that does not rely on privileged execution
 # to run Docker-in-Docker. All the required tools are installed directly in the image.
+# See https://github.com/OctopusDeploy/TenPillarsK8s/releases/latest/download/tenpillarsk8s.pdf
+# chapter 3 "Verifiable deployments" for a breakdown of this Dockerfile.
 
 FROM ubuntu:22.04
 RUN echo 'APT::Install-Suggests "0";' >> /etc/apt/apt.conf.d/00-docker
