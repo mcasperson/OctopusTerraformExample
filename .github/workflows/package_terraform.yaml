@@ -9,8 +9,7 @@ jobs:
 
     - uses: actions/checkout@v3
 
-    - id: get_artifact_name
-      name: Create ZIP Packages
+    - name: Create ZIP Packages
       run: |-
         zip -r space_create.0.0.${{ github.run_number }}.zip space_create
         zip -r space_init.0.0.${{ github.run_number }}.zip space_init
@@ -19,7 +18,8 @@ jobs:
         zip -r space_lookup.0.0.${{ github.run_number }}.zip space_lookup
       shell: bash
 
-    - uses: ncipollo/release-action@v1
+    - name: Upload ZIP packages
+      uses: ncipollo/release-action@v1
       with:
         artifacts: >
           space_lookup.0.0.${{ github.run_number }}.zip,
