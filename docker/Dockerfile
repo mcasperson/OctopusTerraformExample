@@ -7,8 +7,14 @@ RUN echo 'APT::Install-Recommends "0";' >> /etc/apt/apt.conf.d/00-docker
 
 # Install some common utilities
 RUN apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl unzip libicu-dev \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl wget unzip libicu-dev \
   && rm -rf /var/lib/apt/lists/*
+
+# Install libssl (see https://askubuntu.com/questions/1403619/mongodb-install-fails-on-ubuntu-22-04-depends-on-libssl1-1-but-it-is-not-insta about
+# installing older versions of libssl that are required by the Octopus tentacle)
+RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb \
+  && dpkg -i ./libssl1.1_1.1.0g-2ubuntu4_amd64.deb \
+  && rm -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb
 
 # Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
