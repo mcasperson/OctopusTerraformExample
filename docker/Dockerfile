@@ -9,7 +9,7 @@ RUN echo 'APT::Install-Recommends "0";' >> /etc/apt/apt.conf.d/00-docker
 
 # Install some common utilities
 RUN apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl wget unzip libicu-dev \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl wget unzip libicu-dev jq \
   && rm -rf /var/lib/apt/lists/*
 
 # Install libssl (see https://askubuntu.com/questions/1403619/mongodb-install-fails-on-ubuntu-22-04-depends-on-libssl1-1-but-it-is-not-insta about
