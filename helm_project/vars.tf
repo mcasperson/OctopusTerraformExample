@@ -35,12 +35,6 @@ variable "octopus_project_name" {
   description = "The name of the new project to create."
 }
 
-variable "octopus_project_description" {
-  type        = string
-  nullable    = false
-  description = "The description of the new project to create."
-}
-
 variable "helm_package_id" {
   type        = string
   nullable    = false
@@ -61,14 +55,15 @@ variable "helm_variables" {
 }
 
 variable "octopus_environments" {
-  type = list(string)
-  nullable = false
+  type        = list(string)
+  nullable    = false
   description = "The list of environments in the space."
-  default = ["Development", "Test", "Production"]
+  default     = ["Development", "Test", "Production"]
 }
 
 variable "worker_pool_name" {
-  type = string
-  nullable = false
+  type        = string
+  nullable    = false
   description = "The name of the worker pool to run deployments from"
+  default     = "Kubernetes Workers"
 }

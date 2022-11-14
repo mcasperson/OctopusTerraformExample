@@ -70,15 +70,18 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
         "Octopus.Action.Script.ScriptSource": "Inline",
         "Octopus.Action.Script.Syntax": "Bash",
         "Octopus.Action.Script.ScriptBody": <<EOF
+        # Read the token, namespace, and certificate from the pod hosting the worker
         TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
         NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
         CA=$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
 
+        # Create a new token account with the token details
         New-OctopusTokenAccount \
           -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" \
           -token $TOKEN \
           -updateIfExisting
 
+        # Create a new target pointing to the hosting K8s cluster
         New-OctopusKubernetesTarget \
           -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" \
           -clusterUrl "https://kubernetes.default.svc" \
@@ -105,7 +108,7 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
       worker_pool_id = octopusdeploy_static_worker_pool.new_pool.id
       primary_package {
         acquisition_location = "Server"
-        feed_id              = data.octopusdeploy_feeds.built_in.feeds[0].id
+        feed_id              = octopusdeploy_helm_feed.dashboard.id
         package_id           = var.helm_package_id
         properties           = {
           "SelectionMode" : "immediate"
