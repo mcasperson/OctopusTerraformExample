@@ -10,7 +10,7 @@ resource "octopusdeploy_project" "new_project" {
   auto_create_release                  = false
   default_guided_failure_mode          = "EnvironmentDefault"
   default_to_skip_if_already_installed = false
-  description                          = "Deploys the Kubernetes dashboard"
+  description                          = var.octopus_project_description
   discrete_channel_release             = false
   is_disabled                          = false
   is_discrete_channel_release          = false

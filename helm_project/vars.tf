@@ -35,6 +35,12 @@ variable "octopus_project_name" {
   description = "The name of the new project to create."
 }
 
+variable "octopus_project_description" {
+  type        = string
+  nullable    = false
+  description = "The description of the new project."
+}
+
 variable "helm_package_id" {
   type        = string
   nullable    = false
