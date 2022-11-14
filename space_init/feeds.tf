@@ -13,6 +13,7 @@ resource "octopusdeploy_helm_feed" "dashboard" {
   feed_uri = "https://kubernetes.github.io/dashboard/"
   name     = "Kubernetes Dashboard"
 }
+
 # This is a new helm feed that allows us to deploy the K8s dashboard
 resource "octopusdeploy_helm_feed" "bitnami" {
   feed_uri = "https://charts.bitnami.com/bitnami"

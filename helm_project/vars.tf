@@ -54,13 +54,6 @@ variable "helm_variables" {
   default     = {}
 }
 
-variable "octopus_environments" {
-  type        = list(string)
-  nullable    = false
-  description = "The list of environments in the space."
-  default     = ["Development", "Test", "Production"]
-}
-
 variable "worker_pool_name" {
   type        = string
   nullable    = false

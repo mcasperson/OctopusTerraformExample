@@ -16,7 +16,8 @@ data "octopusdeploy_feeds" "built_in" {
 
 # Get the ID of the built-in feed for the current space.
 data "octopusdeploy_feeds" "kubernetes_dashboard" {
-  feed_type = "Kubernetes Dashboard"
+  feed_type = "Helm"
+  name      = "Kubernetes Dashboard"
   skip      = 0
   take      = 1
 }
