@@ -10,4 +10,5 @@ terraform {
 provider "octopusdeploy" {
   address  = var.octopus_server
   api_key  = var.octopus_apikey
+  space_if = var.octopus_space_id
 }
