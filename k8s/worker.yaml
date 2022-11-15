@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: octopus-worker-local
+  labels:
+    app: tentacle
+spec:
+  selector:
+    matchLabels:
+      app: tentacle
+  revisionHistoryLimit: 1
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: tentacle
+    spec:
+      serviceAccountName: aws-admin-account
+      containers:
+        - name: worker
+          image: index.docker.io/octopussamples/flightcentretentacle:latest
+          env:
+            - name: Space
+              value: '#{Octopus.Space.Name}'
+            - name: ACCEPT_EULA
+              value: 'Y'
+            - name: TargetWorkerPool
+              value: Kubernetes Workers
+            - name: ServerUrl
+              value: 'https://mattc.octopus.app'
+            - name: ServerApiKey
+              value: '#{Octopus.ApiKey}'
+            - name: ServerPort
+              value: '10943'
+            - name: DISABLE_DIND
+              value: 'Y'
+          resources:
+            requests:
+              memory: 256Mi
+            limits:
+              memory: 2Gi
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - '-c'
+                  - >-
+                    export ID=$(curl -s -H "X-Octopus-ApiKey: ${ServerApiKey}" ${ServerUrl}/api/#{Octopus.Space.Id}/workers | jq -r ".Items[] | select(.Name | contains("Matthew")) | .Id");
+                    curl -X DELETE -s -H "X-Octopus-ApiKey: ${ServerApiKey}" ${ServerUrl}/api/#{Octopus.Space.Id}/workers/${ID}
