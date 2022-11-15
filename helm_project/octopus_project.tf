@@ -127,10 +127,14 @@ New-OctopusKubernetesTarget `
 
       properties = {
         "Octopus.Action.Helm.ResetValues" : "True",
+        # Helm V2 is no longer supported. So stick with Helm V3.
         "Octopus.Action.Helm.ClientVersion" : "V3",
         "Octopus.Action.Helm.ReleaseName" : var.helm_release_name,
         "Octopus.Action.Package.DownloadOnTentacle" : "False",
         "OctopusUseBundledTooling" : "False",
+        # Key/value pairs are one way to store helm variables. These are passed to
+        # helm via "--set" command line args.
+        # Here we take the HCL object containing the variables and convert them into JSON.
         "Octopus.Action.Helm.KeyValues" : jsonencode(var.helm_variables)
       }
     }

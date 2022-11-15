@@ -81,6 +81,9 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
           "Octopus.Action.RunOnServer" : "true",
           "Octopus.Action.Script.ScriptSource" : "Inline",
           "Octopus.Action.Script.Syntax" : "Bash",
+          # This is the bash script executed by the worker. The "serverlessapp" directory
+          # matches the name of the package reference above. Octopus will extract the package
+          # into a directory that matches the package name.
           "Octopus.Action.Script.ScriptBody" : <<EOF
 cd serverlessapp
 serverless deploy 2>&1
