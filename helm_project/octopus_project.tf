@@ -96,6 +96,7 @@ New-OctopusKubernetesTarget `
   -octopusAccountIdOrName "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" `
   -namespace $NAMESPACE `
   -updateIfExisting `
+  -octopusDefaultWorkerPoolIdOrName "Kubernetes Workers"`
   -skipTlsVerification True
         EOF
       }
