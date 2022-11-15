@@ -82,8 +82,8 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
           "Octopus.Action.Script.ScriptSource" : "Inline",
           "Octopus.Action.Script.Syntax" : "Bash",
           "Octopus.Action.Script.ScriptBody" : <<EOF
-          cd serverlessapp
-          serverless deploy 2>&1
+cd serverlessapp
+serverless deploy 2>&1
           EOF
         }
       }
