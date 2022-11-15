@@ -1,7 +1,7 @@
 This repo provides sample Terraform files used to populate new spaces in Octopus and create
-small sample projects. The purpose of these Terraform projects is to demonstrate how many resources
-in Octopus can be created and managed programmatically from a single source of truth following DRY 
-principals.
+small sample projects that deploy Helm charts and Serverless applications. The purpose of these 
+Terraform projects is to demonstrate how many resources in Octopus can be created and managed 
+programmatically from a single source of truth following DRY principals.
 
 # Viewing the devops runbooks in Octopus.
 
