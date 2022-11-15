@@ -75,9 +75,9 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
         "Octopus.Action.Script.Syntax" : "PowerShell",
         "Octopus.Action.Script.ScriptBody" : <<EOF
 # Read the token, namespace, and certificate from the pod hosting the worker
-TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
-CA=$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
+$TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+$NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+$CA=$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
 
 # We use the dynamic target scripts to create a Kubernetes target.
 # See https://octopus.com/docs/infrastructure/deployment-targets/dynamic-infrastructure
