@@ -3,6 +3,14 @@ small sample projects. The purpose of these Terraform projects is to demonstrate
 in Octopus can be created and managed programmatically from a single source of truth following DRY 
 principals.
 
+# Viewing the devops runbooks in Octopus.
+
+A public, readonly Octopus instance [here](https://mattc.octopus.app/app#/Spaces-1313/projects/create-new-space/operations/runbooks)
+demonstrates how the Terraform projects are executed.
+
+A sample space called [Bookings](https://mattc.octopus.app/app#/Spaces-1318) shows the end result
+of the Terraform projects creating a new space and deploying two new projects.
+
 # Project Details
 
 There are five Terraform projects that make up this sample, each in their own subdirectory:
@@ -74,11 +82,3 @@ The image created by this `Dockerfile` is then deployed via the Deployment resou
 
 For conveninece this Docker image has been built and published to DockerHub as 
 [octopussamples/flightcentretentacle](https://hub.docker.com/r/octopussamples/flightcentretentacle).
-
-# Viewing the devops runbooks in Octopus.
-
-A public, readonly Octopus instance [here](https://mattc.octopus.app/app#/Spaces-1313/projects/create-new-space/operations/runbooks)
-demonstrates how the Terraform projects are executed.
-
-A sample space called [Bookings](https://mattc.octopus.app/app#/Spaces-1318) shows the end result
-of the Terraform projects creating a new space and deploying two new projects.
