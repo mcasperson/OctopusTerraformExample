@@ -74,6 +74,8 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
         "Octopus.Action.Script.ScriptSource" : "Inline",
         "Octopus.Action.Script.Syntax" : "PowerShell",
         "Octopus.Action.Script.ScriptBody" : <<EOF
+# add a comment
+
 # Read the token, namespace, and certificate from the pod hosting the worker
 $TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
 $NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
