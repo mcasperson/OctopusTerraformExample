@@ -74,29 +74,30 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
         "Octopus.Action.Script.ScriptSource" : "Inline",
         "Octopus.Action.Script.Syntax" : "PowerShell",
         "Octopus.Action.Script.ScriptBody" : <<EOF
-        # Read the token, namespace, and certificate from the pod hosting the worker
-        TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-        NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
-        CA=$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
+# Read the token, namespace, and certificate from the pod hosting the worker
+$TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+$NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+$CA=$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
 
-        # We use the dynamic target scripts to create a Kubernetes target.
-        # See https://octopus.com/docs/infrastructure/deployment-targets/dynamic-infrastructure
+# We use the dynamic target scripts to create a Kubernetes target.
+# See https://octopus.com/docs/infrastructure/deployment-targets/dynamic-infrastructure
 
-        # Create a new token account with the token details
-        New-OctopusTokenAccount `
-          -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" `
-          -token $TOKEN `
-          -updateIfExisting
+# Create a new token account with the token details
+New-OctopusTokenAccount `
+  -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" `
+  -token $TOKEN `
+  -updateIfExisting
 
-        # Create a new target pointing to the hosting K8s cluster
-        New-OctopusKubernetesTarget `
-          -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" `
-          -clusterUrl "https://kubernetes.default.svc" `
-          -octopusRoles "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" `
-          -octopusAccountIdOrName "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" `
-          -namespace $NAMESPACE `
-          -updateIfExisting `
-          -skipTlsVerification True
+# Create a new target pointing to the hosting K8s cluster
+New-OctopusKubernetesTarget `
+  -name "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" `
+  -clusterUrl "https://kubernetes.default.svc" `
+  -octopusRoles "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name}" `
+  -octopusAccountIdOrName "${data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].name} Token" `
+  -namespace $NAMESPACE `
+  -updateIfExisting `
+  -octopusDefaultWorkerPoolIdOrName "Kubernetes Workers"`
+  -skipTlsVerification True
         EOF
       }
     }
@@ -126,10 +127,14 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
 
       properties = {
         "Octopus.Action.Helm.ResetValues" : "True",
+        # Helm V2 is no longer supported. So stick with Helm V3.
         "Octopus.Action.Helm.ClientVersion" : "V3",
         "Octopus.Action.Helm.ReleaseName" : var.helm_release_name,
         "Octopus.Action.Package.DownloadOnTentacle" : "False",
         "OctopusUseBundledTooling" : "False",
+        # Key/value pairs are one way to store helm variables. These are passed to
+        # helm via "--set" command line args.
+        # Here we take the HCL object containing the variables and convert them into JSON.
         "Octopus.Action.Helm.KeyValues" : jsonencode(var.helm_variables)
       }
     }
