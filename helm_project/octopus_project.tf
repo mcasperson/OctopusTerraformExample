@@ -117,7 +117,7 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
       worker_pool_id = data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].id
       primary_package {
         acquisition_location = "Server"
-        feed_id              = data.octopusdeploy_feeds.kubernetes_dashboard.feeds[0].id
+        feed_id              = data.octopusdeploy_feeds.helm_feed.feeds[0].id
         package_id           = var.helm_package_id
         properties           = {
           "SelectionMode" : "immediate"

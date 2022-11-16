@@ -15,7 +15,7 @@ data "octopusdeploy_feeds" "built_in" {
 }
 
 # Get the ID of the feed hosting the helm chart
-data "octopusdeploy_feeds" "kubernetes_dashboard" {
+data "octopusdeploy_feeds" "helm_feed" {
   feed_type = "Helm"
   name      = var.helm_feed_name
   skip      = 0
