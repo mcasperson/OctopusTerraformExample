@@ -74,6 +74,8 @@ resource "octopusdeploy_deployment_process" "new_deployment_process" {
         "Octopus.Action.Script.ScriptSource" : "Inline",
         "Octopus.Action.Script.Syntax" : "PowerShell",
         "Octopus.Action.Script.ScriptBody" : <<EOF
+# add a comment
+
 # Read the token, namespace, and certificate from the pod hosting the worker
 $TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
 $NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
@@ -118,7 +120,7 @@ New-OctopusKubernetesTarget `
       worker_pool_id = data.octopusdeploy_worker_pools.kubernetes_worker_pool.worker_pools[0].id
       primary_package {
         acquisition_location = "Server"
-        feed_id              = data.octopusdeploy_feeds.kubernetes_dashboard.feeds[0].id
+        feed_id              = data.octopusdeploy_feeds.helm_feed.feeds[0].id
         package_id           = var.helm_package_id
         properties           = {
           "SelectionMode" : "immediate"
