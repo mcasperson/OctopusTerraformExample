@@ -1,4 +1,4 @@
-# This Dockerfile builds an Octopus polling worker image that does not rely on privileged execution
+# This Dockerfile builds an Octopus listening worker image that does not rely on privileged execution
 # to run Docker-in-Docker. All the required tools are installed directly in the image.
 # See https://github.com/OctopusDeploy/TenPillarsK8s/releases/latest/download/tenpillarsk8s.pdf
 # chapter 3 "Verifiable deployments" for a breakdown of this Dockerfile.
@@ -61,31 +61,27 @@ RUN mkdir /opt/octopus
 RUN tar xvzf tentacle-linux_x64.tar.gz -C /opt/octopus
 RUN echo '#!/bin/bash' > /opt/configure.sh
 RUN echo '/opt/octopus/tentacle/Tentacle create-instance \
-    --instance "Worker" \
-    --config "/etc/octopus/Worker/tentacle-Worker.config"' \
+    --instance "Listening" \
+    --config "/etc/octopus/Listening/tentacle-Listening.config"' \
     >> /opt/configure.sh
 RUN echo '/opt/octopus/tentacle/Tentacle new-certificate \
-    --instance "Worker" \
+    --instance "Listening" \
     --if-blank' \
     >> /opt/configure.sh
 RUN echo '/opt/octopus/tentacle/Tentacle configure \
-    --instance "Worker" \
+    --instance "Listening" \
     --app "/home/Octopus/Applications" \
-    --noListen "True" --reset-trust' \
+    --port 10933 \
+    --noListen False \
+    --reset-trust' \
     >> /opt/configure.sh
-RUN echo '/opt/octopus/tentacle/Tentacle register-worker \
-    --instance "Worker" \
-    --force --server "${ServerUrl}" \
-    --name `hostname` \
-    --comms-style "TentacleActive" \
-    --server-comms-port "10943" \
-    --apiKey "${ServerApiKey}" \
-    --space "${Space}" \
-    --workerpool "${TargetWorkerPool}"' \
+RUN echo '/opt/octopus/tentacle/Tentacle configure \
+    --instance "Listening" \
+    --trust ${OctopusServerThumbprint}' \
     >> /opt/configure.sh
 RUN echo '/opt/octopus/tentacle/Tentacle agent \
     --noninteractive \
-    --instance "Worker"' >> /opt/configure.sh
+    --instance "Listening"' >> /opt/configure.sh
 RUN chmod +x /opt/configure.sh
 
 ENTRYPOINT []
