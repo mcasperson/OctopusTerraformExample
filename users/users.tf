@@ -23,8 +23,10 @@ resource "octopusdeploy_team" "viewers" {
   can_change_roles = true
   user_role {
     user_role_id = octopusdeploy_user_role.deployment_viewer.id
+    space_id = var.octopus_space_id
   }
   user_role {
     user_role_id = octopusdeploy_user_role.environment_viewer.id
+    space_id = var.octopus_space_id
   }
 }
