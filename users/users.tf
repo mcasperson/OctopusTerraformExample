@@ -2,7 +2,7 @@ resource "octopusdeploy_user_role" "deployment_viewer" {
   can_be_deleted             = true
   description                = "Ability to view a deployment."
   granted_space_permissions  = ["DeploymentView"]
-  name                       = "Deployment Viewer"
+  name                       = "Custom Deployment Viewer"
   space_permission_descriptions = []
 }
 
@@ -10,7 +10,7 @@ resource "octopusdeploy_user_role" "environment_viewer" {
   can_be_deleted             = true
   description                = "Ability to view enviornments."
   granted_space_permissions  = ["EnvironmentView"]
-  name                       = "Environment Viewer"
+  name                       = "Custom Environment Viewer"
   space_permission_descriptions = []
 }
 
