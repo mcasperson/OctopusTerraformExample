@@ -16,6 +16,7 @@ jobs:
         zip -r helm_project.0.0.${{ github.run_number }}.zip helm_project
         zip -r serverless_project.0.0.${{ github.run_number }}.zip serverless_project
         zip -r space_lookup.0.0.${{ github.run_number }}.zip space_lookup
+        zip -r users.0.0.${{ github.run_number }}.zip users
       shell: bash
 
     - name: Upload ZIP packages
@@ -27,4 +28,5 @@ jobs:
           space_init.0.0.${{ github.run_number }}.zip,
           serverless_project.0.0.${{ github.run_number }}.zip,
           helm_project.0.0.${{ github.run_number }}.zip
+          users.0.0.${{ github.run_number }}.zip
         tag: 0.0.${{ github.run_number }}
